@@ -1,1 +1,11 @@
-{}
+{
+  "routes": [
+    {
+      "route": "login",
+      "methods": [
+        "post"
+      ],
+      "statusCode": 200
+    }
+  ]
+}
