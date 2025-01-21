@@ -1,10 +1,18 @@
 {
   "routes": [
     {
-      "route": "login",
-      "methods": [
-        "post"
-      ],
+      "route": "/login",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/register",
+      "serve": "/index.html",
+      "statusCode": 200
+    },
+    {
+      "route": "/*",
+      "serve": "/index.html",
       "statusCode": 200
     }
   ]
