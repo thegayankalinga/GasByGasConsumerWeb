@@ -5,6 +5,12 @@
       "methods": [
         "post"
       ]
+    },
+    {
+      "route": "/register",
+      "methods": [
+        "post"
+      ]
     }
   ]
 }
