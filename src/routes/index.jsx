@@ -2,44 +2,50 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "./../provider/authProvider";
 import { ProtectedRoute } from "./../utils/ProtectedRoute";
 import Login from "./../pages/auth/Login";
+import NotFound from "./../pages/notfound/NotFound";
 import Register from "./../pages/auth/Register";
+import Consumer from "../scenes/Consumer";
+import {
+    Dashboard,
+    Team,
+    Invoices,
+    Contacts,
+    Form,
+    FAQ,
+} from "./../scenes";
 
 const Routes = () => {
     const { token } = useAuth();
 
     const routesForPublic = [
         {
-            path: "/service",
-            element: <div>Service Page</div>,
+            path: "/",
+            element: <div>Home Page</div>,
         },
         {
-            path: "/about-us",
-            element: <div>About Us</div>,
-        },
+            path: "*",
+            element: <NotFound/>,
+        }
     ];
 
     const routesForAuthenticatedOnly = [
         {
-            path: "/",
-            element: <ProtectedRoute />,
+            path: "/consumer",
+            element: <Consumer />,
             children: [
                 {
-                    path: "",
-                    element: <div>User Home Page</div>,
+                    path: "/consumer/",
+                    element: <Dashboard />,
                 },
                 {
-                    path: "/profile",
-                    element: <div>User Profile</div>,
+                    path: "/consumer/team",
+                    element: <Team />,
                 }
             ],
         },
     ];
 
     const routesForNotAuthenticatedOnly = [
-        {
-            path: "/",
-            element: <div>Home Page</div>,
-        },
         {
             path: "/login",
             element: <Login />,
@@ -50,10 +56,17 @@ const Routes = () => {
         },
     ];
 
+    const notfound =  [
+        {
+            path: "*",
+            element: <NotFound/>,
+        }
+    ];
+
     const router = createBrowserRouter([
         ...routesForPublic,
         ...(!token ? routesForNotAuthenticatedOnly : []),
-        ...routesForAuthenticatedOnly,
+        ...(token ? routesForAuthenticatedOnly : []),
     ]);
 
     return <RouterProvider router={router} />;
