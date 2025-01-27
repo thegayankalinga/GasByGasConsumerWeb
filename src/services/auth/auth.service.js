@@ -23,6 +23,7 @@ class AuthService {
   logout() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+    return true;
   }
 
   register(email, password, fullName, nic, phoneNumber, address, city) {

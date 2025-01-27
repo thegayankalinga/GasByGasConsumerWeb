@@ -85,7 +85,7 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
         setErrors([]);
         toast.success('Login successful!');
         setToken(loginResponse.token);
-        navigate("/profile", { replace: true });
+        navigate("/consumer", { replace: true });
       }
       else {
         toast.error('Something missing');
