@@ -1,16 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import AuthProvider from "./provider/authProvider";
+import Routes from "./routes";
 
-const App = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
-};
+}
 
 export default App;
