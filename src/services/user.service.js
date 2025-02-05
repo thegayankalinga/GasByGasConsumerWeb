@@ -4,6 +4,11 @@ import authHeader from './auth/auth-header';
 const API_URL = 'http://localhost:8080/api/test/';
 
 class UserService {
+
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem('user'));;
+  }
+  
   getPublicContent() {
     return axios.get(API_URL + 'all');
   }

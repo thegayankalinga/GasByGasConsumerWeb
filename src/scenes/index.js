@@ -6,6 +6,8 @@ import Invoices from "./invoices";
 import Contacts from "./contacts";
 import Form from "./form";
 import FAQ from "./faq";
+import Outlets from "./outlets";
+import Tokens from "./tokens";
 
 export {
   Navbar,
@@ -16,4 +18,6 @@ export {
   Contacts,
   Form,
   FAQ,
+  Outlets,
+  Tokens
 };

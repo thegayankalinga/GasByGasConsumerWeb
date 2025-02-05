@@ -78,7 +78,7 @@ function Dashboard() {
         >
           <StatBox
             title="11,361"
-            subtitle="Email Sent"
+            subtitle="My Request"
             progress="0.75"
             increase="+14%"
             icon={

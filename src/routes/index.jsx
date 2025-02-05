@@ -7,7 +7,9 @@ import Register from "./../pages/auth/Register";
 import Consumer from "../scenes/Consumer";
 import {
     Dashboard,
+    Outlets,
     Team,
+    Tokens,
     Invoices,
     Contacts,
     Form,
@@ -36,6 +38,14 @@ const Routes = () => {
                 {
                     path: "/consumer/",
                     element: <Dashboard />,
+                },
+                {
+                    path: "/consumer/mytoken",
+                    element: <Tokens/>,
+                },
+                {
+                    path: "/consumer/outlets",
+                    element: <Outlets/>,
                 },
                 {
                     path: "/consumer/team",
