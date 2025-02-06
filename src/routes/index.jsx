@@ -3,6 +3,7 @@ import { useAuth } from "./../provider/authProvider";
 import { ProtectedRoute } from "./../utils/ProtectedRoute";
 import Login from "./../pages/auth/Login";
 import NotFound from "./../pages/notfound/NotFound";
+import Home from "./../pages/common/Home";
 import Register from "./../pages/auth/Register";
 import Consumer from "../scenes/Consumer";
 import {
@@ -22,7 +23,7 @@ const Routes = () => {
     const routesForPublic = [
         {
             path: "/",
-            element: <div>Home Page</div>,
+            element: <Home/>,
         },
         {
             path: "*",
