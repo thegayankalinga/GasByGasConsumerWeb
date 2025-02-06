@@ -13,46 +13,27 @@ import {
 } from "../../components";
 import {
   DownloadOutlined,
-  Email,
-  PersonAdd,
-  PointOfSale,
   Traffic,
 } from "@mui/icons-material";
+import PersonIcon from '@mui/icons-material/Person';
+import PropaneTankIcon from '@mui/icons-material/PropaneTank';
 import { tokens } from "../../theme/theme";
 import { mockTransactions } from "../../data/mockData";
-
+import userService from "./../../services/user.service";
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import StoreIcon from '@mui/icons-material/Store';
+import { ConsumerType, getConsumerName } from "./../../utils/ConsumerType";
 function Dashboard() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isXlDevices = useMediaQuery("(min-width: 1260px)");
   const isMdDevices = useMediaQuery("(min-width: 724px)");
   const isXsDevices = useMediaQuery("(max-width: 436px)");
+  const user = userService.getCurrentUser();
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-        {!isXsDevices && (
-          <Box>
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: colors.blueAccent[700],
-                color: "#fcfcfc",
-                fontSize: isMdDevices ? "14px" : "10px",
-                fontWeight: "bold",
-                p: "10px 20px",
-                mt: "18px",
-                transition: ".3s ease",
-                ":hover": {
-                  bgcolor: colors.blueAccent[800],
-                },
-              }}
-              startIcon={<DownloadOutlined />}
-            >
-              DOWNLOAD REPORTS
-            </Button>
-          </Box>
-        )}
       </Box>
 
       {/* GRID & CHARTS */}
@@ -62,8 +43,8 @@ function Dashboard() {
           isXlDevices
             ? "repeat(12, 1fr)"
             : isMdDevices
-            ? "repeat(6, 1fr)"
-            : "repeat(3, 1fr)"
+              ? "repeat(6, 1fr)"
+              : "repeat(3, 1fr)"
         }
         gridAutoRows="140px"
         gap="20px"
@@ -77,13 +58,15 @@ function Dashboard() {
           justifyContent="center"
         >
           <StatBox
-            title="11,361"
-            subtitle="My Request"
-            progress="0.75"
-            increase="+14%"
+            subtitle={
+              <Typography variant="h4" sx={{ fontWeight: "bold", fontSize: "20px", color: "#FFF" }}>
+                {user.noOfCylindersAllowed} Cylinders Allowed
+              </Typography>
+            }
+            progress={user.noOfCylindersAllowed / 10}
             icon={
-              <Email
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <PropaneTankIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
               />
             }
           />
@@ -96,13 +79,15 @@ function Dashboard() {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
-            progress="0.50"
-            increase="+21%"
+            subtitle={
+              <Typography variant="h4" sx={{ fontWeight: "bold", fontSize: "20px", color: "#FFF" }}>
+                {user.remainingCylindersAllowed} Remaining Cylinders
+              </Typography>
+            }
+            progress={user.remainingCylindersAllowed / 10}
             icon={
-              <PointOfSale
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <PropaneTankIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
               />
             }
           />
@@ -115,13 +100,14 @@ function Dashboard() {
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
-            subtitle="New Clients"
-            progress="0.30"
-            increase="+5%"
+            subtitle={
+              <Typography variant="h4" sx={{ fontWeight: "bold", fontSize: "20px", color: "#FFF" }}>
+                {(user.isConfirm) ? "Active" : "In Active"} Account
+              </Typography>
+            }
             icon={
-              <PersonAdd
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              <PersonIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
               />
             }
           />
@@ -134,116 +120,34 @@ function Dashboard() {
           justifyContent="center"
         >
           <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress="0.80"
-            increase="+43%"
-            icon={
-              <Traffic
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
+            subtitle={
+              <Typography variant="h4" sx={{ fontWeight: "bold", fontSize: "20px", color: "#FFF" }}>
+                {getConsumerName(user.userType)}
+              </Typography>
             }
+            icon=
+            {user.userType === 0
+              ? <PersonIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
+              />
+              : user.userType === 1
+                ? <StoreIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
+                />
+                : <WarehouseIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "50px" }}
+                />}
           />
         </Box>
 
-        {/* ---------------- Row 2 ---------------- */}
 
-        {/* Line Chart */}
-        <Box
-          gridColumn={
-            isXlDevices ? "span 8" : isMdDevices ? "span 6" : "span 3"
-          }
-          gridRow="span 2"
-          bgcolor={colors.primary[400]}
-        >
-          <Box
-            mt="25px"
-            px="30px"
-            display="flex"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.gray[100]}
-              >
-                Revenue Generated
-              </Typography>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                $59,342.32
-              </Typography>
-            </Box>
-            <IconButton>
-              <DownloadOutlined
-                sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-              />
-            </IconButton>
-          </Box>
-          <Box height="250px" mt="-20px">
-          </Box>
-        </Box>
-
-        {/* Transaction Data */}
-        <Box
-          gridColumn={isXlDevices ? "span 4" : "span 3"}
-          gridRow="span 2"
-          bgcolor={colors.primary[400]}
-          overflow="auto"
-        >
-          <Box borderBottom={`4px solid ${colors.primary[500]}`} p="15px">
-            <Typography color={colors.gray[100]} variant="h5" fontWeight="600">
-              Recent Transactions
-            </Typography>
-          </Box>
-
-          {mockTransactions.map((transaction, index) => (
-            <Box
-              key={`${transaction.txId}-${index}`}
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
-            >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {transaction.txId}
-                </Typography>
-                <Typography color={colors.gray[100]}>
-                  {transaction.user}
-                </Typography>
-              </Box>
-              <Typography color={colors.gray[100]}>
-                {transaction.date}
-              </Typography>
-              <Box
-                bgcolor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                ${transaction.cost}
-              </Box>
-            </Box>
-          ))}
-        </Box>
-
-        {/* Revenue Details */}
-        <Box
+        {/* <Box
           gridColumn={isXlDevices ? "span 4" : "span 3"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           p="30px"
         >
-          <Typography variant="h5" fontWeight="600">
+          <Typography variant="h4" fontWeight="600">
             Campaign
           </Typography>
           <Box
@@ -255,7 +159,7 @@ function Dashboard() {
             <ProgressCircle size="125" />
             <Typography
               textAlign="center"
-              variant="h5"
+              variant="h4"
               color={colors.greenAccent[500]}
               sx={{ mt: "15px" }}
             >
@@ -265,16 +169,16 @@ function Dashboard() {
               Includes extra misc expenditures and costs
             </Typography>
           </Box>
-        </Box>
+        </Box> */}
 
-        {/* Bar Chart */}
-        <Box
+       
+        {/* <Box
           gridColumn={isXlDevices ? "span 4" : "span 3"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
         >
           <Typography
-            variant="h5"
+            variant="h4"
             fontWeight="600"
             sx={{ p: "30px 30px 0 30px" }}
           >
@@ -287,18 +191,18 @@ function Dashboard() {
             height="250px"
             mt="-20px"
           >
-           asdasdasd
+            asdasdasd
           </Box>
-        </Box>
+        </Box> */}
 
-        {/* Geography Chart */}
-        <Box
+       
+        {/* <Box
           gridColumn={isXlDevices ? "span 4" : "span 3"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           padding="30px"
         >
-          <Typography variant="h5" fontWeight="600" mb="15px">
+          <Typography variant="h4" fontWeight="600" mb="15px">
             Geography Based Traffic
           </Typography>
           <Box
@@ -307,9 +211,9 @@ function Dashboard() {
             justifyContent="center"
             height="200px"
           >
-        adasdasdasd
+            adasdasdasd
           </Box>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

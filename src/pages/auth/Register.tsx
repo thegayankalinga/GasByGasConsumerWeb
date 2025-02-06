@@ -12,11 +12,13 @@ import { Link } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import CircularProgress from "@mui/material/CircularProgress";
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from './../../theme/AppTheme';
 import AuthService from "./../../services/auth/auth.service";
 import SelectableCity from '../../components/fields/SelectableCity';
+import UserTypeSelect from '../../components/fields/UserTypeSelect';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './style.css';
@@ -76,13 +78,23 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
   const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = React.useState('');
   const [addressError, setAddressError] = React.useState(false);
   const [addressErrorMessage, setAddressErrorMessage] = React.useState('');
+  const [businessRegistrationError, setBusinessRegistrationError] = React.useState(false);
+  const [businessRegistrationErrorMessage, setBusinessRegistrationErrorMessage] = React.useState('');
+  const [noOfCylindersAllowedError, setNoOfCylindersAllowedError] = React.useState(false);
+  const [noOfCylindersAllowedErrorMessage, setNoOfCylindersAllowedErrorMessage] = React.useState('');
   const [selectedCity, setSelectedCity] = React.useState('');
+  const [selectedUserType, setSelectedUserType] = React.useState('');
   const [errors, setErrors] = React.useState({});
   const navigate = useNavigate();
 
   const handleCityChange = (selectedCity) => {
     setSelectedCity(selectedCity.value);
   };
+
+  const handleUserTypeChange = (selectedUserType) => {
+    setSelectedUserType(selectedUserType);
+  };
+
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -93,6 +105,15 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
     const address = document.getElementById('address') as HTMLInputElement;
 
     let isValid = true;
+
+    if (!selectedCity) {
+      setAddressError(true);
+      setAddressErrorMessage('Please enter the address.');
+      isValid = false;
+    } else {
+      setAddressError(false);
+      setAddressErrorMessage('');
+    }
 
     if (!email.value) {
       setEmailError(true);
@@ -105,6 +126,29 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
     } else {
       setEmailError(false);
       setEmailErrorMessage('');
+    }
+
+    if (selectedUserType.value != 0) {
+      const businessRegistration = document.getElementById('businessRegistration') as HTMLInputElement;
+      const noOfCylindersAllowed = document.getElementById('noOfCylindersAllowed') as HTMLInputElement;
+
+      if (!businessRegistration.value) {
+        setBusinessRegistrationError(true);
+        setBusinessRegistrationErrorMessage('Please enter the Business Registration number.');
+        isValid = false;
+      } else if (!noOfCylindersAllowed.value) {
+        setNoOfCylindersAllowedError(true);
+        setNoOfCylindersAllowedErrorMessage('Please enter the number of cylinder you want per month.');
+        isValid = false;
+        setBusinessRegistrationError(false);
+        setBusinessRegistrationErrorMessage('');
+      }
+      else {
+        setNoOfCylindersAllowedError(false);
+        setNoOfCylindersAllowedErrorMessage('');
+        setBusinessRegistrationError(false);
+        setBusinessRegistrationErrorMessage('');
+      }
     }
 
     if (!address.value) {
@@ -164,15 +208,13 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
     const data = new FormData(event.currentTarget);
     event.preventDefault();
     try {
-      const loginResponse = await AuthService.register(data.get('email'), data.get('password'), data.get('fullname'), data.get('nic'), data.get('phoneNumber'), data.get('address'), data.get('city'));
+      const loginResponse = await AuthService.register(data.get('email'), data.get('password'), data.get('fullname'), data.get('nic'), data.get('phoneNumber'), data.get('address'), data.get('city'), data.get('businessRegistration'),selectedUserType.label,data.get('noOfCylindersAllowed'));
       if (loginResponse && loginResponse.token) {
         setErrors([]);
         toast.success('Registration successful! please login');
         setInterval(() => {
           navigate("/login", { replace: true });
         }, 3000);
-        // setToken(loginResponse.token);
-        // navigate("/profile", { replace: true });
       }
       else {
         toast.error('Something missing');
@@ -181,10 +223,15 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
       console.log(error)
       if (error.status == 400 && error.response.data.errors) {
         setErrors(error.response.data.errors);
+      } else if (error.status == 400 && error.response.data) {
+        setErrors(error.response.data.errors);
       }
       else if (error.status == 401 && error.response.data) {
         toast.error(error.response.data);
       } else if (error.status == 500 && error.response.data) {
+        setErrors(error.response.data.errors);
+      }
+      else if (error.status == 500 && error.response.data) {
         setErrors(error.response.data.errors);
       }
       else {
@@ -196,7 +243,7 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-        <ToastContainer />
+      <ToastContainer />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <Typography
@@ -265,6 +312,7 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
                   {error} </p>
               ))}
             </FormControl>
+
             <SelectableCity name="city" onCitySelect={handleCityChange} />
             {errors.City && errors.City.map((error) => (
               <p class="server-error-message">
@@ -328,6 +376,53 @@ export default function Register(props: { disableCustomTheme?: boolean }) {
                   {error} </p>
               ))}
             </FormControl>
+
+            <UserTypeSelect name="city" onUserTypeSelect={handleUserTypeChange} />
+
+            {(selectedUserType.value != 0) && (
+            <>
+              <FormControl>
+                <FormLabel htmlFor="businessRegistration">Business Registration Number</FormLabel>
+                <TextField
+                  autoComplete="businessRegistration"
+                  name="businessRegistration"
+                  required
+                  fullWidth
+                  id="businessRegistration"
+                  placeholder="V-275896"
+                  error={businessRegistrationError}
+                  helperText={businessRegistrationErrorMessage}
+                  color={businessRegistrationError ? 'error' : 'primary'}
+                />
+                {errors.BusinessRegistration && errors.businessRegistration.map((error) => (
+                  <p className="server-error-message" key={error}> {/* Added key to map items */}
+                    {error}
+                  </p>
+                ))}
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="noOfCylindersAllowed">No Of Cylinders Required</FormLabel>
+                <TextField
+                  autoComplete="noOfCylindersAllowed"
+                  name="noOfCylindersAllowed"
+                  required
+                  fullWidth
+                  id="noOfCylindersAllowed"
+                  placeholder="V-275896"
+                  error={noOfCylindersAllowedError}
+                  helperText={noOfCylindersAllowedErrorMessage}
+                  color={noOfCylindersAllowedError ? 'error' : 'primary'}
+                />
+                {errors.noOfCylindersAllowed && errors.noOfCylindersAllowed.map((error) => (
+                  <p className="server-error-message" key={error}>
+                    {error}
+                  </p>
+                ))}
+              </FormControl>
+            </>
+            )}
+
 
             <Button
               type="submit"

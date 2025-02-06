@@ -96,12 +96,12 @@ const Navbar = () => {
       </Box>
 
       <Box>
-        <IconButton>
+        {/* <IconButton>
           <NotificationsOutlined />
         </IconButton>
         <IconButton>
           <SettingsOutlined />
-        </IconButton>
+        </IconButton> */}
         <IconButton onClick={handleLogoutClick}>
           <LogoutOutlined />
         </IconButton>

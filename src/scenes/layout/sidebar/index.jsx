@@ -18,6 +18,7 @@ import avatar from "../../../assets/images/avatar.png";
 import Item from "./Item";
 import { ToggledContext } from "../../Consumer";
 import userService from "./../../../services/user.service"
+import { ConsumerType, getConsumerName } from "./../../../utils/ConsumerType";
 
 const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -106,6 +107,14 @@ const SideBar = () => {
             >
               {user.fullName}
             </Typography>
+            <Typography
+              variant="4"
+              fontWeight="600"
+              color={colors.greenAccent[500]}
+            >
+              {getConsumerName(user.userType)}
+            </Typography>
+
           </Box>
         </Box>
       )}

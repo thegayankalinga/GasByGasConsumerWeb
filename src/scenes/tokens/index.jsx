@@ -8,7 +8,7 @@ import {
     useTheme,
 } from "@mui/material";
 import { Header } from "../../components";
-import { DownloadOutlined } from "@mui/icons-material";
+import { CreateRounded } from "@mui/icons-material";
 import { tokens } from "../../theme/theme";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
@@ -22,11 +22,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const columns = [
     { field: "requestDate", headerName: "Date", type: "number", width: 100 },
-    { field: "expectedPickupDate", headerName: "Expected Pickup Date", type: "number", width: 150 },
-    { field: "isEmpltyCylindersGiven", headerName: "Empty Cylinder", width: 100, valueGetter: (params) => params ? "Received" : "Not Yet" },
+    { field: "expectedPickupDate", headerName: "Expected Pickup Date", type: "number", width: 100 },
+    { field: "isEmpltyCylindersGiven", headerName: "Empty Cylinder", width: 80, valueGetter: (params) => params ? "Received" : "Not Yet" },
     { field: "isPaid", headerName: "Payment", width: 80, valueGetter: (params) => params ? "Received" : "Not Yet" },
-    { field: "paymentDate", headerName: "Payment Date", type: "number", width: 130, valueGetter: (params) => params ? params : "_" },
-    { field: "readyDate", headerName: "Cylinder Collectable Date", type: "number", width: 150, valueGetter: (params) => params ? params : "_" },
+    { field: "paymentDate", headerName: "Payment Date", type: "number", width: 90, valueGetter: (params) => params ? params : "_" },
+    { field: "readyDate", headerName: "Cylinder Collectable Date", type: "number", width: 100, valueGetter: (params) => params ? params : "_" },
     { field: "outletName", headerName: "Outlet Name", width: 100 },
     { field: "outletAddress", headerName: "Outlet Address", width: 150 },
     { field: "outletCity", headerName: "City", type: "number", width: 80 },
@@ -119,25 +119,30 @@ function Tokens() {
             <ToastContainer />
             <Box display="flex" justifyContent="space-between">
                 <Header title="My Tokens" subtitle="List Of Your GBG Tokens" />
-                {!isXsDevices && (
-                    <Button
-                        variant="contained"
-                        sx={{
-                            bgcolor: colors.blueAccent[700],
-                            color: "#fcfcfc",
-                            fontSize: isMdDevices ? "14px" : "10px",
-                            fontWeight: "bold",
-                            p: "10px 20px",
-                            mt: "18px",
-                            transition: ".3s ease",
-                            ":hover": { bgcolor: colors.blueAccent[800] },
-                        }}
-                        startIcon={<DownloadOutlined />}
-                        onClick={handlePopupOpen}
-                    >
-                        DOWNLOAD REPORTS
-                    </Button>
-                )}
+              
+
+                   {!isXsDevices && (
+                                    <Box>
+                                        <Button
+                                            variant="contained"
+                                            sx={{
+                                                bgcolor: colors.blueAccent[700],
+                                                color: "#fcfcfc",
+                                                fontSize: isMdDevices ? "14px" : "10px",
+                                                fontWeight: "bold",
+                                                p: "10px 20px",
+                                                mt: "18px",
+                                                transition: ".3s ease",
+                                                ":hover": { bgcolor: colors.blueAccent[800] },
+                                            }}
+                                            startIcon={<CreateRounded />}
+                                            onClick={handlePopupOpen}
+                                        >
+                                            {" "}
+                                            Request Token{" "}
+                                        </Button>{" "}
+                                    </Box>
+                                )}{" "}
             </Box>
             <Paper sx={{ height: 400, width: "100%" }}>
                 <DataGrid
