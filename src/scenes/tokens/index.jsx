@@ -50,7 +50,7 @@ function Tokens() {
         setLoading(true);
         try {
             setLoading(true);
-            const response = await GasTokenService.getAll();
+            const response = await GasTokenService.getAll(user.email);
             if (response) {
                 const outlets = await OutletService.getAllOutlet();
                 setOutlets(outlets);
