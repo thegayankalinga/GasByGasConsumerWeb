@@ -4,9 +4,9 @@ import authHeader from './auth/auth-header';
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 class GasTokenService {
-  getAll() {
+  getAll(param) {
     return axios
-      .get(API_URL + "gastoken", { headers: authHeader() })
+      .get(API_URL + "gastoken/byuser/"+param, { headers: authHeader()})
       .then(response => {
         if (response.status == 200) {
           return response.data;

@@ -10,13 +10,6 @@ import {
     useTheme,
 } from "@mui/material";
 import { Header, ProgressCircle, StatBox } from "../../components";
-import {
-    DownloadOutlined,
-    Email,
-    PersonAdd,
-    PointOfSale,
-    Traffic,
-} from "@mui/icons-material";
 import { tokens } from "../../theme/theme";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
@@ -80,27 +73,6 @@ function Outlets() {
         <Box m="20px">
             <Box display="flex" justifyContent="space-between">
                 <Header title="Outlets" subtitle="Gas By Gas Outlets" />
-                {!isXsDevices && (
-                    <Box>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                bgcolor: colors.blueAccent[700],
-                                color: "#fcfcfc",
-                                fontSize: isMdDevices ? "14px" : "10px",
-                                fontWeight: "bold",
-                                p: "10px 20px",
-                                mt: "18px",
-                                transition: ".3s ease",
-                                ":hover": { bgcolor: colors.blueAccent[800] },
-                            }}
-                            startIcon={<DownloadOutlined />}
-                        >
-                            {" "}
-                            DOWNLOAD REPORTS{" "}
-                        </Button>{" "}
-                    </Box>
-                )}{" "}
             </Box>
             <Paper sx={{ height: 400, width: "100%" }}>
                 <DataGrid
