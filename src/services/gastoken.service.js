@@ -29,6 +29,19 @@ class GasTokenService {
         }
       });
   }
+
+  updateReq(expectedPickupDate,userType, id) {
+    return axios
+      .put(API_URL + "gastoken/expectedDate/"+id, {expectedPickupDate,userType}, { headers: authHeader()})
+      .then(response => {
+        if (response.status == 200) {
+          return response.data;
+        }
+        else {
+          console.log('something missing');
+        }
+      });
+  }
 }
 
 export default new GasTokenService();

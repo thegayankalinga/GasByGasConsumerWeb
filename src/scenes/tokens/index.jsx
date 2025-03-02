@@ -7,6 +7,7 @@ import {
     useMediaQuery,
     useTheme,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import { Header } from "../../components";
 import { CreateRounded } from "@mui/icons-material";
 import { tokens } from "../../theme/theme";
@@ -15,44 +16,16 @@ import Paper from "@mui/material/Paper";
 import GasTokenService from "./../../services/gastoken.service";
 import OutletService from "./../../services/outlet.service";
 import TokenFormPopup from "./../../components/token/TokenFormPopup";
+import TokenFormUpdatePopup from "./../../components/token/TokenFormUpdatePopup";
 import { ConsumerType, getConsumerName } from "./../../utils/ConsumerType";
 import userService from "./../../services/user.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import notificationService from "../../services/notification.service";
-
-const columns = [
-    { field: "requestDate", headerName: "Date", type: "number", width: 100 },
-    { field: "expectedPickupDate", headerName: "Expected Pickup Date", type: "number", width: 100 },
-    { field: "isEmpltyCylindersGiven", headerName: "Empty Cylinder", width: 80, valueGetter: (params) => params? "Received" : "Not Yet" },
-    { field: "isPaid", headerName: "Payment", width: 80, valueGetter: (params) => params ? "Received" : "Not Yet" },
-    { field: "paymentDate", headerName: "Payment Date", type: "number", width: 90, valueGetter: (params) => params ? params : "_" },
-    { field: "readyDate", headerName: "Cylinder Collectable Date", type: "number", width: 100, valueGetter: (params) => params ? params : "_" },
-    { field: "outletName", headerName: "Outlet Name", width: 100 },
-    { field: "outletAddress", headerName: "Outlet Address", width: 150 },
-    { field: "outletCity", headerName: "City", type: "number", width: 80 },
-    {
-        field: "status",
-        headerName: "Token Status",
-        width: 100,
-        valueGetter: (params) => {
-            switch (params.status) {
-                case 1:
-                    return "Pending";
-                case 2:
-                    return "Assigned";
-                case 3:
-                    return "Completed";
-                case 4:
-                    return "Cancelled";
-                default:
-                    return "Unknown"; // Or handle other cases
-            }
-        },
-    }
-];
+import { Edit } from "@mui/icons-material";
 
 const paginationModel = { page: 0, pageSize: 5 };
+
 
 function Tokens() {
     const user = userService.getCurrentUser();
@@ -62,9 +35,11 @@ function Tokens() {
     const [error, setError] = useState(null);
     const theme = useTheme();
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [isPopupToeknUpdateOpen, setIsPopupToeknUpdateOpen] = useState(false);
     const colors = tokens(theme.palette.mode);
     const isMdDevices = useMediaQuery("(min-width: 724px)");
     const isXsDevices = useMediaQuery("(max-width: 436px)");
+    const [rowData, setRowData] = useState(null);
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -91,6 +66,52 @@ function Tokens() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleUpdatePopupOpen = (row) => {
+        setRowData(row);
+        setIsPopupToeknUpdateOpen(true);
+    };
+
+    const columns = [
+        { field: "requestDate", headerName: "Date", type: "number", width: 100 },
+        { field: "expectedPickupDate", headerName: "Expected Pickup Date", type: "number", width: 100 },
+        { field: "isEmpltyCylindersGiven", headerName: "Empty Cylinder", width: 80, valueGetter: (params) => params? "Received" : "Not Yet" },
+        { field: "isPaid", headerName: "Payment", width: 80, valueGetter: (params) => params ? "Received" : "Not Yet" },
+        { field: "paymentDate", headerName: "Payment Date", type: "number", width: 90, valueGetter: (params) => params ? params : "_" },
+        { field: "readyDate", headerName: "Cylinder Collectable Date", type: "number", width: 100, valueGetter: (params) => params ? params : "_" },
+        { field: "outletName", headerName: "Outlet Name", width: 100 },
+        { field: "outletAddress", headerName: "Outlet Address", width: 150 },
+        { field: "outletCity", headerName: "City", type: "number", width: 80 },
+        {
+            field: "status",
+            headerName: "Token Status",
+            width: 100,
+            valueGetter: (params) => {
+                switch (params.status) {
+                    case 1:
+                        return "Pending";
+                    case 2:
+                        return "Assigned";
+                    case 3:
+                        return "Completed";
+                    case 4:
+                        return "Cancelled";
+                    default:
+                        return "Unknown"; // Or handle other cases
+                }
+            },
+        }, {
+            field: "edit",
+            headerName: "Action",
+            width: 100,
+            renderCell: (params) => (
+                <IconButton onClick={() => handleUpdatePopupOpen(params.row)}>
+                    <Edit />
+                </IconButton>
+            )
+        }
+    ];
+
 
     const handlePopupOpen = () => setIsPopupOpen(true);
     const handlePopupClose = () => setIsPopupOpen(false);
@@ -123,6 +144,54 @@ function Tokens() {
             setLoading(false);
         }
 
+    };
+
+    const handlePopupToeknUpdatePopupOpen = () => {
+        setIsPopupToeknUpdateOpen(true);
+    };
+
+    const handlePopupToeknUpdatePopupClose = () => {
+        setIsPopupToeknUpdateOpen(false);
+    };
+
+    const handlePopupToeknUpdateFormSubmit = async (formData) => {
+        console.log("Form data submitted:", formData);
+        setLoading(true);
+        let userType;
+        switch (formData.userType) {
+            case 0:
+                userType = "Personal";
+                break;
+            case 1:
+                userType = "Business";
+                break;
+            case 2:
+                userType = "Industry";
+                break;
+            case 3:
+                userType = "Admin";
+                break;
+            case 4:
+                userType = "Manager";
+                break;
+            default:
+                userType = "";
+        }
+            const expectedPickupDate = formData.expectedPickupDate.format("YYYY-MM-DD");
+        try {
+            const response = await GasTokenService.updateReq(expectedPickupDate,userType, formData.id);
+            if (response) {
+                toast.success('Gas Request expected date successfully updated.');
+                fetchData();
+            } else {
+                toast.error('Something missing');
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+        handlePopupToeknUpdatePopupClose();
     };
 
     if (loading) {
@@ -181,6 +250,14 @@ function Tokens() {
                 />
             </Paper>
             <TokenFormPopup open={isPopupOpen} handleClose={handlePopupClose} handleSubmit={handleFormSubmit} outletOptions={outlets} />
+            <TokenFormUpdatePopup
+                open={isPopupToeknUpdateOpen}
+                handleClose={handlePopupToeknUpdatePopupClose}
+                handleSubmit={handlePopupToeknUpdateFormSubmit}
+                rowData={rowData}
+                userType={rowData?.userType}
+                expectedPickupDate={rowData?.expectedPickupDate} // pass rowData pickup Date
+            />
         </Box>
     );
 }
