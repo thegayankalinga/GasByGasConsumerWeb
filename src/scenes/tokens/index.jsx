@@ -19,6 +19,7 @@ import { ConsumerType, getConsumerName } from "./../../utils/ConsumerType";
 import userService from "./../../services/user.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import notificationService from "../../services/notification.service";
 
 const columns = [
     { field: "requestDate", headerName: "Date", type: "number", width: 100 },
@@ -102,8 +103,16 @@ function Tokens() {
 
         try {
             const response = await GasTokenService.createReq({ "expectedPickupDate": exDate, "userType": consumerType }, { "outletId": outletId, "consumerEmail": email });
-            if (response) {
+            if (response) {   
+                console.log(response)             
                 toast.success('Gas Request Successfully Created.');
+                const resMail = notificationService.sendEmail(response.userEmail,user.fullName,"Your token successfully created",
+                    "Dear sir, <br>Your request successfully saved<br><br>Expected PickupDate:"+response.expectedPickupDate+"<br>"
+                );
+                const resSms = notificationService.sendSms(user.phoneNumber,
+                    "Dear sir, Your request successfully saved.  Expected PickupDate:"+response.expectedPickupDate+"<br>"
+                );
+
                 fetchData();
             } else {
                 toast.error('Something missing');
