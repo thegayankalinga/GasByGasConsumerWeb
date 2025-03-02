@@ -131,16 +131,16 @@ const SideBar = () => {
             },
           }}
         >
-          <Item
+          {/* <Item
             title="Dashboard"
             path="/consumer"
             colors={colors}
             icon={<DashboardOutlined />}
-          />
+          /> */}
 
           <Item
             title="Gas Token"
-            path="/consumer/mytoken"
+            path="/consumer"
             colors={colors}
             icon={<ReceiptOutlined />}
           />

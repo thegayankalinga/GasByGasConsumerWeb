@@ -38,10 +38,6 @@ const Routes = () => {
             children: [
                 {
                     path: "/consumer/",
-                    element: <Dashboard />,
-                },
-                {
-                    path: "/consumer/mytoken",
                     element: <Tokens/>,
                 },
                 {
@@ -67,12 +63,12 @@ const Routes = () => {
         },
     ];
 
-    const notfound =  [
-        {
-            path: "*",
-            element: <NotFound/>,
-        }
-    ];
+    // const notfound =  [
+    //     {
+    //         path: "*",
+    //         element: <NotFound/>,
+    //     }
+    // ];
 
     const router = createBrowserRouter([
         ...routesForPublic,

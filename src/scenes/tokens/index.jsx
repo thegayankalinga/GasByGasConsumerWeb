@@ -23,14 +23,32 @@ import 'react-toastify/dist/ReactToastify.css';
 const columns = [
     { field: "requestDate", headerName: "Date", type: "number", width: 100 },
     { field: "expectedPickupDate", headerName: "Expected Pickup Date", type: "number", width: 100 },
-    { field: "isEmpltyCylindersGiven", headerName: "Empty Cylinder", width: 80, valueGetter: (params) => params ? "Received" : "Not Yet" },
+    { field: "isEmpltyCylindersGiven", headerName: "Empty Cylinder", width: 80, valueGetter: (params) => params? "Received" : "Not Yet" },
     { field: "isPaid", headerName: "Payment", width: 80, valueGetter: (params) => params ? "Received" : "Not Yet" },
     { field: "paymentDate", headerName: "Payment Date", type: "number", width: 90, valueGetter: (params) => params ? params : "_" },
     { field: "readyDate", headerName: "Cylinder Collectable Date", type: "number", width: 100, valueGetter: (params) => params ? params : "_" },
     { field: "outletName", headerName: "Outlet Name", width: 100 },
     { field: "outletAddress", headerName: "Outlet Address", width: 150 },
     { field: "outletCity", headerName: "City", type: "number", width: 80 },
-    { field: "status", headerName: "Token Status", type: "number", width: 100 },
+    {
+        field: "status",
+        headerName: "Token Status",
+        width: 100,
+        valueGetter: (params) => {
+            switch (params.status) {
+                case 1:
+                    return "Pending";
+                case 2:
+                    return "Assigned";
+                case 3:
+                    return "Completed";
+                case 4:
+                    return "Cancelled";
+                default:
+                    return "Unknown"; // Or handle other cases
+            }
+        },
+    }
 ];
 
 const paginationModel = { page: 0, pageSize: 5 };
