@@ -109,9 +109,9 @@ function Tokens() {
                 const resMail = notificationService.sendEmail(response.userEmail,user.fullName,"Your token successfully created",
                     "Dear sir, <br>Your request successfully saved<br><br>Expected PickupDate:"+response.expectedPickupDate+"<br>"
                 );
-                const resSms = notificationService.sendSms(user.phoneNumber,
-                    "Dear sir, Your request successfully saved.  Expected PickupDate:"+response.expectedPickupDate+"<br>"
-                );
+                // const resSms = notificationService.sendSms(user.phoneNumber,
+                //     "Dear sir, Your request successfully saved.  Expected PickupDate:"+response.expectedPickupDate+"<br>"
+                // );
 
                 fetchData();
             } else {
