@@ -137,6 +137,12 @@ const SideBar = () => {
             colors={colors}
             icon={<DashboardOutlined />}
           /> */}
+          {/* <Item
+            title="Profile"
+            path="/consumer/Profile"
+            colors={colors}
+            icon={<PeopleAltOutlined />}
+          /> */}
 
           <Item
             title="Gas Token"
@@ -171,6 +177,7 @@ const SideBar = () => {
             colors={colors}
             icon={<PeopleAltOutlined />}
           />
+          
         </Menu>
       </Box>
     </Sidebar>

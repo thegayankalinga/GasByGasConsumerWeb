@@ -8,7 +8,7 @@ import Form from "./form";
 import FAQ from "./faq";
 import Outlets from "./outlets";
 import Tokens from "./tokens";
-
+import Profile from "./profile";
 export {
   Navbar,
   SideBar,
@@ -19,5 +19,6 @@ export {
   Form,
   FAQ,
   Outlets,
-  Tokens
+  Tokens,
+  Profile
 };

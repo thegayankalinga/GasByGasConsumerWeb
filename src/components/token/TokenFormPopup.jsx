@@ -3,8 +3,12 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, S
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
 
 function TokenFormPopup({ open, handleClose, handleSubmit, outletOptions }) {
+    const shouldDisablePreviousDates = (date) => {
+        return date.isBefore(dayjs(), 'day'); // Disable dates before today
+      };
     const [formData, setFormData] = useState({
         expectedPickupDate: null,
         outletID: "",
@@ -28,12 +32,13 @@ function TokenFormPopup({ open, handleClose, handleSubmit, outletOptions }) {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Create new Gas Requests</DialogTitle>
                 <DialogContent>
-                    <DatePicker
-                        label="Expected Pickup Date"
-                        value={formData.expectedPickupDate}
-                        onChange={handleDateChange}
-                        renderInput={(params) => <TextField {...params} fullWidth margin="dense" />}
-                    />
+                <DatePicker
+      label="Expected Pickup Date"
+      value={formData.expectedPickupDate}
+      onChange={handleDateChange}
+      shouldDisableDate={shouldDisablePreviousDates}
+      renderInput={(params) => <TextField {...params} fullWidth margin="dense" />}
+    />
 
                     <FormControl fullWidth margin="dense">
                         <InputLabel>Outlet ID</InputLabel>

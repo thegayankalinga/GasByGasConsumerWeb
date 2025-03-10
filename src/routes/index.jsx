@@ -15,6 +15,7 @@ import {
     Contacts,
     Form,
     FAQ,
+    Profile,
 } from "./../scenes";
 
 const Routes = () => {
@@ -47,6 +48,10 @@ const Routes = () => {
                 {
                     path: "/consumer/team",
                     element: <Team />,
+                },
+                {
+                    path: "/consumer/profile",
+                    element: <Profile />,
                 }
             ],
         },

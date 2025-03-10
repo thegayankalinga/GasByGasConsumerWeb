@@ -35,6 +35,10 @@ function TokenFormUpdatePopup({ open, handleClose, handleSubmit, rowData, userTy
         handleClose();
     };
 
+    const shouldDisablePreviousDates = (date) => {
+        return date.isBefore(dayjs(), 'day');
+    };
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Dialog open={open} onClose={handleClose}>
@@ -56,6 +60,7 @@ function TokenFormUpdatePopup({ open, handleClose, handleSubmit, rowData, userTy
                         onChange={handleDateChange}
                         style={{ display: 'none' }}
                         renderInput={(params) => <TextField {...params} fullWidth margin="dense" />}
+                        shouldDisableDate={shouldDisablePreviousDates} // Disable previous dates
                     />
 
                     <TextField
