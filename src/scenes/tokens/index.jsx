@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import * as React from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import {
-    Box,
-    Button,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+import { Box, Button, TextField, useMediaQuery, useTheme, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { Header } from "../../components";
 import { CreateRounded } from "@mui/icons-material";
@@ -22,7 +17,7 @@ import userService from "./../../services/user.service";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import notificationService from "../../services/notification.service";
-import { Edit } from "@mui/icons-material";
+import { Edit , Delete} from "@mui/icons-material";
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -40,6 +35,8 @@ function Tokens() {
     const isMdDevices = useMediaQuery("(min-width: 724px)");
     const isXsDevices = useMediaQuery("(max-width: 436px)");
     const [rowData, setRowData] = useState(null);
+    const [deleteId, setDeleteId] = useState(null);
+    const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -66,6 +63,33 @@ function Tokens() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleDeleteConfirmOpen = (id) => {
+        setDeleteId(id);
+        setOpenDeleteConfirm(true);
+    };
+
+    const handleDeleteConfirmClose = () => {
+        setOpenDeleteConfirm(false);
+    };
+
+    const handleDelete = async () => {
+        setLoading(true);
+        try {
+            const response = await GasTokenService.deleteReq(deleteId);
+            if (response) {
+                toast.success('Gas Request Successfully Deleted.');
+                fetchData();
+            } else {
+                toast.error('Deletion failed.');
+            }
+        } catch (error) {
+            setError(error);
+        } finally {
+            setLoading(false);
+            setOpenDeleteConfirm(false);
+        }
+    };
 
     const handleUpdatePopupOpen = (row) => {
         setRowData(row);
@@ -105,9 +129,14 @@ function Tokens() {
             headerName: "Action",
             width: 100,
             renderCell: (params) => (
+                <>
                 <IconButton onClick={() => handleUpdatePopupOpen(params.row)}>
                     <Edit />
                 </IconButton>
+                <IconButton onClick={() => handleDeleteConfirmOpen(params.row.id)}>
+                <Delete />
+            </IconButton>
+            </>
             )
         }
     ];
@@ -248,6 +277,29 @@ function Tokens() {
                     pageSizeOptions={[5, 10, 20]}
                     sx={{ border: 0 }}
                 />
+                <Dialog
+                    open={openDeleteConfirm}
+                    onClose={handleDeleteConfirmClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {"Confirm Delete"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Are you sure you want to delete this item?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDeleteConfirmClose} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleDelete} color="primary" autoFocus>
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
             <TokenFormPopup open={isPopupOpen} handleClose={handlePopupClose} handleSubmit={handleFormSubmit} outletOptions={outlets} />
             <TokenFormUpdatePopup

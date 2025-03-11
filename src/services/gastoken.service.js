@@ -42,6 +42,18 @@ class GasTokenService {
         }
       });
   }
+  deleteReq(id) {
+    return axios
+      .delete(API_URL + "gastoken/"+id, { headers: authHeader() })
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        else {
+          console.log('something missing');
+        }
+      });
+  }
 }
 
 export default new GasTokenService();
